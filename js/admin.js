@@ -83,8 +83,8 @@ function CrearProducto() {
   bodyTabla.innerHTML='';
   ListarProductos();
 }
-
-function LimpiarFormulario() {
+//con esta forma declaramos una funcion global
+window.LimpiarFormulario=function() {
   form.reset();
   inputCodigo.className = "form-control";
   inputCodigo.value = ObtenerCodigoAleatorio();
