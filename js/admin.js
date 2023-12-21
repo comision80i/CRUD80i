@@ -42,6 +42,8 @@ inputImgUrl.addEventListener("blur", () => {
 //Llamamos a la funcion listar productos para crear filas en nuestra tabla
 ListarProductos();
 
+let esEdicion = false;
+
 function GuardarProducto(e) {
   // e = event
   e.preventDefault();
@@ -54,7 +56,11 @@ function GuardarProducto(e) {
       inputImgUrl
     )
   ) {
-    CrearProducto();
+    if (esEdicion) {
+      GuardarProductoEditado();
+    } else {
+      CrearProducto();
+    }
   } else {
     Swal.fire({
       title: "Ups",
@@ -80,11 +86,51 @@ function CrearProducto() {
     icon: "success",
   });
   LimpiarFormulario();
-  bodyTabla.innerHTML='';
   ListarProductos();
 }
+
+function GuardarProductoEditado() {
+  let indexProducto = arrayProductos.findIndex((element) => {
+    return element.codigo === inputCodigo.value;
+  });
+
+  if (indexProducto !== -1) {
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "Vas a cambiar los datos de un producto",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        arrayProductos[indexProducto].codigo = inputCodigo.value;
+        arrayProductos[indexProducto].nombre = inputNombre.value;
+        arrayProductos[indexProducto].descripcion = inputDescripcion.value;
+        arrayProductos[indexProducto].precio = inputPrecio.value;
+        arrayProductos[indexProducto].imgUrl = inputImgUrl.value;
+        esEdicion=false;
+        Swal.fire({
+          title: "Exito",
+          text: "El producto se actualizo correctamente",
+          icon: "success",
+        });
+
+        LimpiarFormulario();
+        ListarProductos();
+      }else{
+        esEdicion=false;
+        LimpiarFormulario();
+      }
+    });
+  }else{
+    console.log('entro en el else de guardar producto editado por q el codigo no existe dentro del arrProductos');
+  }
+}
 //con esta forma declaramos una funcion global
-window.LimpiarFormulario=function() {
+window.LimpiarFormulario = function () {
   form.reset();
   inputCodigo.className = "form-control";
   inputCodigo.value = ObtenerCodigoAleatorio();
@@ -93,13 +139,14 @@ window.LimpiarFormulario=function() {
   inputPrecio.className = "form-control";
   inputImgUrl.className = "form-control";
   GuardarLocalStorage();
-}
+};
 
 function GuardarLocalStorage() {
   localStorage.setItem("productos", JSON.stringify(arrayProductos));
 }
 
 function ListarProductos() {
+  bodyTabla.innerHTML = "";
   arrayProductos.forEach((element) => {
     bodyTabla.innerHTML += ` <tr>                  
        <th scope="row">${element.codigo}</th>
@@ -108,9 +155,25 @@ function ListarProductos() {
        <td>${element.precio}</td>
        <td><a href="${element.imgUrl}" target="_blank" title="Ver Imagen">${element.imgUrl}</a></td>
        <td class="">
-         <button type="button" class="btn btn-warning mx-1">Editar</button>
+       <div class="d-flex">
+         <button type="button" class="btn btn-warning mx-1" onclick="PrepararEdicion('${element.codigo}')">Editar</button>
          <button type="button" class="btn btn-danger mx-1">Eliminar</button>
+         </div>
        </td>                
      </tr>`;
   });
 }
+
+window.PrepararEdicion = function (codigo) {
+  const productoAEditar = arrayProductos.find((element) => {
+    return element.codigo === codigo;
+  });
+  if (productoAEditar !== undefined) {
+    inputCodigo.value = productoAEditar.codigo;
+    inputNombre.value = productoAEditar.nombre;
+    inputDescripcion.value = productoAEditar.descripcion;
+    inputPrecio.value = productoAEditar.precio;
+    inputImgUrl.value = productoAEditar.imgUrl;
+  }
+  esEdicion = true;
+};
