@@ -111,7 +111,7 @@ function GuardarProductoEditado() {
         arrayProductos[indexProducto].descripcion = inputDescripcion.value;
         arrayProductos[indexProducto].precio = inputPrecio.value;
         arrayProductos[indexProducto].imgUrl = inputImgUrl.value;
-        esEdicion=false;
+        esEdicion = false;
         Swal.fire({
           title: "Exito",
           text: "El producto se actualizo correctamente",
@@ -120,13 +120,15 @@ function GuardarProductoEditado() {
 
         LimpiarFormulario();
         ListarProductos();
-      }else{
-        esEdicion=false;
+      } else {
+        esEdicion = false;
         LimpiarFormulario();
       }
     });
-  }else{
-    console.log('entro en el else de guardar producto editado por q el codigo no existe dentro del arrProductos');
+  } else {
+    console.log(
+      "entro en el else de guardar producto editado por q el codigo no existe dentro del arrProductos"
+    );
   }
 }
 //con esta forma declaramos una funcion global
@@ -152,12 +154,12 @@ function ListarProductos() {
        <th scope="row">${element.codigo}</th>
        <td>${element.nombre}</td>
        <td>${element.descripcion}</td>
-       <td>${element.precio}</td>
+       <td>$ ${element.precio}</td>
        <td><a href="${element.imgUrl}" target="_blank" title="Ver Imagen">${element.imgUrl}</a></td>
        <td class="">
        <div class="d-flex">
-         <button type="button" class="btn btn-warning mx-1" onclick="PrepararEdicion('${element.codigo}')">Editar</button>
-         <button type="button" class="btn btn-danger mx-1">Eliminar</button>
+         <a href='#titulo' class="btn btn-warning mx-1" onclick="PrepararEdicion('${element.codigo}')">Editar</a>
+         <button type="button" class="btn btn-danger mx-1" onclick="BorrarProducto('${element.codigo}')" >Eliminar</button>
          </div>
        </td>                
      </tr>`;
@@ -176,4 +178,31 @@ window.PrepararEdicion = function (codigo) {
     inputImgUrl.value = productoAEditar.imgUrl;
   }
   esEdicion = true;
+};
+
+window.BorrarProducto = function (codigo) {
+  Swal.fire({
+    title: "¿Estas seguro?",
+    text: "Los cambios no se podrán revertir",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const nuevoArrProductos = arrayProductos.filter(
+        (element) => element.codigo !== codigo
+      );
+      arrayProductos = nuevoArrProductos;
+      Swal.fire({
+        title: "Exito",
+        text: "El producto se elimino correctamente",
+        icon: "success",
+      });
+      GuardarLocalStorage();
+      ListarProductos();
+    }
+  });
 };
