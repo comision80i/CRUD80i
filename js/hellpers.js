@@ -103,3 +103,18 @@ export function CodigoAleatorio() {
 export function ObtenerCodigoAleatorio(){
     return window.crypto.randomUUID();
 }
+
+export function getRoleUserLog(){
+  const user=JSON.parse(sessionStorage.getItem('user'));
+
+  if(user!==null){
+    return user.role;
+  }else{
+    return 'invitado'
+  };
+};
+
+
+export function saveUserLog(user){
+  sessionStorage.setItem('user', JSON.stringify(user));
+};

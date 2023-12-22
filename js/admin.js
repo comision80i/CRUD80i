@@ -5,6 +5,7 @@ import {
   validarInputUrl,
   validarTodo,
   ObtenerCodigoAleatorio,
+  getRoleUserLog
 } from "./hellpers.js";
 
 let arrayProductos = JSON.parse(localStorage.getItem("productos")) || [];
@@ -206,3 +207,15 @@ window.BorrarProducto = function (codigo) {
     }
   });
 };
+
+
+function checkAdmin(){
+  console.log('entro en checkAdmin');
+  const role=getRoleUserLog();
+
+  if(role!=='Admin'){
+    window.location.replace('/index.html');
+  };  
+};
+
+checkAdmin();
