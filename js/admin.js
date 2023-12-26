@@ -8,6 +8,11 @@ import {
   getRoleUserLog
 } from "./hellpers.js";
 
+import { checkAdmin } from "./user.js";
+
+let adminLi=document.getElementById('adminLi');
+checkAdmin(adminLi);
+
 let arrayProductos = JSON.parse(localStorage.getItem("productos")) || [];
 let bodyTabla = document.querySelector("tbody");
 let inputCodigo = document.getElementById("codigo");
@@ -209,7 +214,7 @@ window.BorrarProducto = function (codigo) {
 };
 
 
-function checkAdmin(){
+function ValidateRole(){
   console.log('entro en checkAdmin');
   const role=getRoleUserLog();
 
@@ -218,4 +223,4 @@ function checkAdmin(){
   };  
 };
 
-checkAdmin();
+ValidateRole();
