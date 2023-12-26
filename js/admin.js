@@ -5,7 +5,13 @@ import {
   validarInputUrl,
   validarTodo,
   ObtenerCodigoAleatorio,
+  getRoleUserLog
 } from "./hellpers.js";
+
+import { checkAdmin } from "./user.js";
+
+let adminLi=document.getElementById('adminLi');
+checkAdmin(adminLi);
 
 let arrayProductos = JSON.parse(localStorage.getItem("productos")) || [];
 let bodyTabla = document.querySelector("tbody");
@@ -206,3 +212,15 @@ window.BorrarProducto = function (codigo) {
     }
   });
 };
+
+
+function ValidateRole(){
+  console.log('entro en checkAdmin');
+  const role=getRoleUserLog();
+
+  if(role!=='Admin'){
+    window.location.replace('/index.html');
+  };  
+};
+
+ValidateRole();
