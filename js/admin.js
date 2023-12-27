@@ -21,7 +21,7 @@ let inputDescripcion = document.getElementById("descripcion");
 let inputPrecio = document.getElementById("precio");
 let inputImgUrl = document.getElementById("imgUrl");
 console.log(bodyTabla);
-let form = document.querySelector("form");
+let form = document.getElementById('formProductos');
 inputCodigo.value = ObtenerCodigoAleatorio();
 
 form.addEventListener("submit", GuardarProducto);
@@ -77,6 +77,7 @@ function GuardarProducto(e) {
 }
 
 function CrearProducto() {
+  console.log('entro en guardar producto');
   const nuevoProducto = {
     codigo: inputCodigo.value,
     nombre: inputNombre.value,
